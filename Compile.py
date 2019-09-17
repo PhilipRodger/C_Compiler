@@ -1,8 +1,17 @@
 import sys
 
+pathOut: str = 'return_2.s'
+contents: str = """.global main
+main:
+        movl    $2, %eax
+        ret
+"""
 
 def compile(path: str) -> str:
-    return path
+    file = open(pathOut, "w+")
+    file.write(contents)
+    file.close()
+    return pathOut
 
 
 if __name__ == '__main__':
