@@ -1,6 +1,6 @@
 import unittest
 import os
-import Compile
+from Src import Compile
 
 
 class SimpleIntReturnCase(unittest.TestCase):
@@ -16,7 +16,6 @@ main:
 """
     returned_path: str
 
-
     def setUp(self):
         # Create simple c file
         file = open(self.path, "w+")
@@ -24,7 +23,7 @@ main:
         file.close()
 
         # Run the program on it
-        self.returned_path = Compile.compile(self.path)
+        self.returned_path = Compile.compile_c(self.path)
 
     def test_name_matches(self):
         self.assertEqual(self.returned_path, self.expected_output_path, "Should output a .s file with same name")
@@ -41,11 +40,23 @@ main:
         output.close()
         self.assertEqual(contents, self.expected_output_contents, "file contents should match")
 
-
     def tearDown(self):
         os.remove(self.path)
-        if os.path.exists(self.expected_output_path):
-            os.remove(self.expected_output_path)
+        if os.path.exists(self.returned_path):
+            os.remove(self.returned_path)
+
+
+class SimpleIntReturnCaseAlternate(SimpleIntReturnCase):
+    path: str = 'return_3.c'
+    input_contents: str = """int main(){
+        return 3;
+    }"""
+    expected_output_path: str = 'return_3.s'
+    expected_output_contents: str = """.global main
+    main:
+            movl    $3, %eax
+            ret
+    """
 
 
 if __name__ == '__main__':
